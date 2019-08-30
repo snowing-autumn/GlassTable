@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GlassTable</string>
+    <string name="loginName">UserName:</string>
+    <string name="loginPasswd">Passwd:</string>
+    <string name="loginCode">Code:</string>
+    <string name="logoDescrbe">LoginLogo</string>
+    <string name="codeDescribe">LoginCode</string>
+</resources>
