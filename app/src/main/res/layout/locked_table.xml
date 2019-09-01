@@ -9,16 +9,16 @@
         android:id="@+id/lockHeadView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/table_head"
+        android:background="@color/white"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/lockHeadView_Text"
+            android:id="@+id/textCorner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/beijin" />
+            android:textColor="@color/lightBlue" />
 
         <View
             android:layout_width="1dp"
@@ -26,7 +26,7 @@
             android:background="@color/white" />
 
         <HorizontalScrollView
-            android:id="@+id/headScrollView"
+            android:id="@+id/lockedRowView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -38,9 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/table_scrollView"
-            android:layout_width="match_parent"
+            android:id="@+id/lockedCowView"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
@@ -51,14 +52,14 @@
 
         <HorizontalScrollView
             android:scrollbars="none"
-            android:id="@+id/lockScrollView_parent"
+            android:id="@+id/unlockedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/main_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:id="@+id/unlockedRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
 
             </android.support.v7.widget.RecyclerView>
 
