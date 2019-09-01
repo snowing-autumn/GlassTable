@@ -18,13 +18,23 @@ import java.util.List;
 
 public class FragmentLockedTable extends Fragment {
     private ArrayList<ArrayList<Course>> coursesArray;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mNumberRecyclerView;
+    private RecyclerView mCourseRecyclerView;
     private ArrayList<courseTime> mCourseTimes=courseTime.getInstance();
 
     public enum ITEM_TYPE {
         ITEM_TYPE_WEEK,
         ITEM_TYPE_NUM,
         ITEM_TYPE_COURSE
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View table=inflater.inflate(R.layout.locked_table,container,false);
+        mNumberRecyclerView =(RecyclerView) table.findViewById(R.id.lockedCowView);
+        mCourseRecyclerView=(RecyclerView)table.findViewById(R.id.unlockedRecyclerView);
+        return table;
     }
 
     public  ArrayList<ArrayList<String>> tableConstruct(){
@@ -66,9 +76,6 @@ public class FragmentLockedTable extends Fragment {
     }
 
 
-
-
-
     private class CourseHolder extends  RecyclerView.ViewHolder{
         private Course mCourse;
         private TextView mCourseInfo;
@@ -83,63 +90,8 @@ public class FragmentLockedTable extends Fragment {
         }
     }
 
-    private class WeekHolder extends  RecyclerView.ViewHolder{
-        private TextView mWeekDayText;
-        private TextView mDayText;
-        public WeekHolder(View view){
-            super(view);
-            mWeekDayText=(TextView)view.findViewById(R.id.weekDayText);
-            mDayText=(TextView)view.findViewById(R.id.dayText);
-        }
-    }
 
-    private class NumberHolder extends RecyclerView.ViewHolder{
 
-        private TextView mStartTimeText;
-        private TextView mNumberText;
-        public NumberHolder(View view){
-            super(view);
-            mStartTimeText=(TextView)view.findViewById(R.id.startTimeText);
-            mNumberText=(TextView)view.findViewById(R.id.numberText);
-        }
-    }
-
-    private class  tableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-
-        private List<Course> mCourses;
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            LayoutInflater inflater= LayoutInflater.from(getActivity());
-            if(ITEM_TYPE.ITEM_TYPE_WEEK.ordinal()==i)
-                return new WeekHolder(inflater.inflate(R.layout.week_view,viewGroup,false));
-            else if(ITEM_TYPE.ITEM_TYPE_NUM.ordinal()==i)
-                return new NumberHolder(inflater.inflate(R.layout.number_view,viewGroup,false));
-            else if(ITEM_TYPE.ITEM_TYPE_COURSE.ordinal()==i)
-                return new CourseHolder(inflater.inflate(R.layout.single_course_view,viewGroup,false));
-            else
-                return null;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mCourses.size();
-        }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View table=inflater.inflate(R.layout.course_fragment,container,false);
-        mRecyclerView =(RecyclerView) table.findViewById(R.id.tableRecyclerView);
-        return table;
-    }
 
 
 }

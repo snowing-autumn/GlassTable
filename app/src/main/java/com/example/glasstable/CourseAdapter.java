@@ -16,6 +16,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             mCardView=(CardView)itemView.findViewById(R.id.numberCardView);
             mTextView=(TextView)itemView.findViewById(R.id.courseInfo);
         }
+
+        public void bind(Course course){
+            String info=course.getCourseName()+"\n"+course.getClassroom();
+            mTextView.setText(info);
+        }
     }
 
     @Override
