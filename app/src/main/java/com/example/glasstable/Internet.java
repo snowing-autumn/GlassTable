@@ -10,20 +10,11 @@ import org.jsoup.Connection.*;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-
-import okhttp3.Cookie;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.*;
 
 
@@ -36,35 +27,12 @@ public class Internet {
     private static String userName="";
     private static String userPasswd="";
     private static Map<String,String> mapCookies;
-    private static  HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
-    private static OkHttpClient client=new OkHttpClient.Builder().cookieJar(new CookieJar() {
-        @Override
-        public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
-            cookieStore.put(httpUrl.host(), list);
-        }
-
-        @Override
-        public List<Cookie> loadForRequest(HttpUrl httpUrl) {
-            List<Cookie> cookies = cookieStore.get(httpUrl.host());
-            return cookies != null ? cookies : new ArrayList<Cookie>();
-        }
-    }).build();
-
-    public static void test()  throws IOException{
-        client=new OkHttpClient();
-        Request request=new Request.Builder().url("http://www.baidu.com").build();
-        //Response response=client.newCall(request).execute();
-    }
 
     public static Bitmap getCode(String path) throws IOException {
-       /* client=new OkHttpClient();
-        Request request=new Request.Builder().url(codeUrl).build();
-        Response response=client.newCall(request).execute();
-        InputStream inputStream=response.body().byteStream();
-        Bitmap code= BitmapFactory.decodeStream(inputStream);*/
-
+        //连接登陆页面
         Response responseForCode=Jsoup.connect(codeUrl).userAgent(userAgent).method(Method.GET).ignoreContentType(true).timeout(5 * 99).execute();
+        //保存cookie
         mapCookies=responseForCode.cookies();
         InputStream inputStream=responseForCode.bodyStream();
         File codeFile=new File(path);
@@ -72,6 +40,7 @@ public class Internet {
             codeFile.delete();
             codeFile.createNewFile();
         }
+        //下载验证码
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(codeFile));
         byte[] buf = new byte[1024];
         int size;
@@ -85,21 +54,25 @@ public class Internet {
 
     }
 
-    public static Document Login() throws IOException{
+    private static Document Login() throws IOException{
+        //使用校园卡号&&密码登录
         Response responseLogin=Jsoup.connect(myUrl).userAgent("Mozilla/5.0").timeout(5 * 200).cookies(mapCookies)
                 .method(Method.POST).data("j_username",userName).data("j_password",userPasswd)
                 .data("j_captcha",captacha).execute();
+        //使用cookie，以确保验证码正确
         mapCookies=responseLogin.cookies();
         Document document=Jsoup.connect("http://jwk.lzu.edu.cn/academic/listLeft.do").userAgent(userAgent)
                 .timeout(5 * 200).cookies(mapCookies).get();
+        //获取教务系统主页面document
         System.out.println(document);
         return document;
     }
 
-    public static Document findCourse(Document document) throws IOException{
+    private static Document findCourse(Document document) {
         Element element=document.getElementById("li14");
         String courseLink=element.selectFirst("a").absUrl("href");
         System.out.println(courseLink);
+        //打开课程表页面
         try{
             document=Jsoup.connect(courseLink).userAgent(userAgent)
                     .timeout(5 * 1000).cookies(mapCookies).get();}catch(Exception e){
@@ -108,7 +81,7 @@ public class Internet {
         return document;
     }
 
-    public static boolean parseCourse(ArrayList<Course> courses, Document document){
+    private static boolean parseCourse(ArrayList<Course> courses, Document document){
         String tempCourseName;
         String tempTeacherName;
         String tempLocation;
@@ -121,7 +94,9 @@ public class Internet {
         char odd;
         boolean isAdd;
         Elements tempInfos;
+        //选取所有与课程相关的窗格
         Elements oriCourses=document.select(".infolist_tab").get(0).select(".infolist_common");
+        //解析课程
         for(Element tr:oriCourses){
             tempCourseName=tr.select("td").get(2).select("a").text();
             tempTeacherName=tr.select("td").get(3).select("a").text();
@@ -129,6 +104,7 @@ public class Internet {
             for(Element info:tempInfos) {
                 isAdd=false;
                 tempLocation = info.select("td").get(3).text();
+                //eg.星期一
                 Pattern pattern2 = Pattern.compile("\\D\\D(\\D)");
                 Matcher matcher2 = pattern2.matcher(info.select("td").get(1).text());
                 matcher2.find();
@@ -159,6 +135,7 @@ public class Internet {
                         tempWeekDay = 0;
                         break;
                 }
+                //eg.晚上9-11节||晚9-11节
                 Pattern pattern3 = Pattern.compile("\\D?\\D(\\d+)-(\\d+)节");
                 Matcher matcher3 = pattern3.matcher(info.select("td").get(2).text());
 
@@ -166,6 +143,7 @@ public class Internet {
                     tempStratNumber = Integer.parseInt(matcher3.group(1));
                     tempEndNumber = Integer.parseInt(matcher3.group(2));
                 } else {
+                    //eg.上午34节||晚910节
                     Pattern pattern4 = Pattern.compile("\\D?\\D(\\d)(\\d)?(\\d)?(\\d)节");
                     Matcher matcher4 = pattern4.matcher(info.select("td").get(2).text());
                     if (matcher4.find()) {
@@ -176,10 +154,11 @@ public class Internet {
                     }
 
                 }
-
+                //eg.第1-18周单周||1-18周全周
                 Pattern pattern1 = Pattern.compile("\\D?(\\d+)-(\\d+)周(\\D)周");
                 Matcher matcher1 = pattern1.matcher(info.select("td").get(0).text());
                 if (!matcher1.find()) {
+                    //eg.第13-14周
                     Pattern pattern0 = Pattern.compile("第(\\d+)-(\\d+)周");
                     Matcher matcher0 = pattern0.matcher(info.select("td").get(0).text());
                     odd = '全';
@@ -187,6 +166,7 @@ public class Internet {
                         tempStartWeek = Integer.parseInt(matcher0.group(1));
                         tempEndWeek = Integer.parseInt(matcher0.group(2));
                     }else {
+                        //eg.12，14，17周
                         pattern0 = Pattern.compile("(\\d+)");
                         matcher0 = pattern0.matcher(info.select("td").get(0).text());
                         odd = '5';

@@ -33,6 +33,13 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.TimeHolder> {
             mNumberText=(TextView)itemView.findViewById(R.id.numberText);
         }
 
+        public void bind(courseTime mCourseTime,int position){
+            String startTime=""+mCourseTime.startHour+":"+mCourseTime.startMinute;
+            mStartTimeText.setText(startTime);
+            String number=""+(position+1);
+            mNumberText.setText(number);
+        }
+
         @Override
         public void onClick(View v) {
             //调用时间修改弹窗
@@ -49,7 +56,7 @@ public class TimeAdapter extends RecyclerView.Adapter<TimeAdapter.TimeHolder> {
 
     @Override
     public void onBindViewHolder(TimeHolder holder, int position) {
-
+        holder.bind(mCourseTimes.get(position),position);
     }
 
     @Override

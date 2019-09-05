@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Course> courseList;
     private ArrayList<ArrayList<Course>> courseArray;
     private Fragment tableFragment;
+    private ViewPager mViewPager;
 
 
 
@@ -45,24 +49,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setBackgroundDrawableResource(R.drawable.ww2);
 
         fbEdit=(FloatingActionButton)findViewById(R.id.fabMenu);
+        fbEdit.setOnClickListener(this);
 
-
-        fbEdit.setOnClickListener(this);/*new View.OnClickListener() {
+        mViewPager=(ViewPager) findViewById(R.id.pageView);
+        FragmentManager pageFM=getSupportFragmentManager();
+        mViewPager.setAdapter(new FragmentPagerAdapter(pageFM) {
             @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                startActivityForResult(intent,1);
+            public Fragment getItem(int position) {
+                ArrayList<Course> coursesOnWeek=courseArray.get(position);
+                return FragmentLockedTable.newInstance(coursesOnWeek);
             }
-        });*/
 
-        FragmentManager fm = getSupportFragmentManager();
+            @Override
+            public int getCount() {
+                return courseArray.size();
+            }
+        });
+
+        /*FragmentManager fm = getSupportFragmentManager();
         tableFragment = fm.findFragmentById(R.id.courseTable);
 
         if (tableFragment == null) {
-            tableFragment = new FragmentCourse();
+            tableFragment = new FragmentLockedTable();
             fm.beginTransaction().add(R.id.courseTable, tableFragment)
                     .commit();
-        }
+        }*/
 
         fbDocker=(RelativeLayout)findViewById(R.id.rlAddBill);
         for (int i = 0; i < llId.length;i++){
@@ -70,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         for (int i = 0;i < fabId.length; i++){
             fab[i] = (FloatingActionButton)findViewById(fabId[i]);
+            fab[i].setOnClickListener(this);
         }
         addfb1=(AnimatorSet) AnimatorInflater.loadAnimator(this,R.animator.fb_animation);
         addfb2=(AnimatorSet) AnimatorInflater.loadAnimator(this,R.animator.fb_animation);
@@ -90,54 +102,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void courseListToArray(ArrayList<Course> mcourseList){
-        ArrayList<ArrayList<Course>> tempCourseArray=new ArrayList<>();
-        Course nullCourse=new Course();
-        for(int i=0;i<20;i++) {
-            ArrayList<Course> weekOfCourseArray=new ArrayList<>();
-            for (int j = 0; j < 12; j++){
-                weekOfCourseArray.add(nullCourse);
+        class Cmp implements Comparator<Course>{
+            @Override
+            public int compare(Course o1, Course o2) {
+                return (o1.getStartNumber()+o1.getWeekDay()*12)-(o2.getStartNumber()+o2.getWeekDay()*12);
             }
-            tempCourseArray.add(weekOfCourseArray);
         }
-        for(Course course:mcourseList){
-            if(course.getIsOddWeek()==0)
-                for(int i=course.getStartWeek()-1;i<course.getEndWeek()&&(i+1)%2==0;i++){
-                    /*for(int j=course.getStartNumber()-1;j<course.getEndNumber();j++){
-                        tempCourseArray.get(i).set(j,course);
-                    }*/
+        Cmp cmp=new Cmp();
+        ArrayList<ArrayList<Course>> tempCourseArray=new ArrayList<>();
+        for(Course course:courseList){
+            course.initWeek();
+        }
+        for(int i=0;i<20;i++){
+            ArrayList<Course> coursesOnWeek=new ArrayList<>();
+            for(Course course:courseList) {
+                if(course.getWeeks().contains(i)){
+                    coursesOnWeek.add(course);
                 }
-            if(course.getIsOddWeek()==1)
-                for(int i=course.getStartWeek()-1;i<course.getEndWeek()&&(i+1)%2==1;i++){
-                    /*for(int j=course.getStartNumber()-1;j<course.getEndNumber();j++){
-                        tempCourseArray.get(i).set(j,course);
-                    }*/
-                    tempCourseArray.get(i).set(course.getWeekDay()-1,course);
-                }
-            if(course.getIsOddWeek()==2)
-                for(int i=course.getStartWeek()-1;i<course.getEndWeek();i++){
-                    /*for(int j=course.getStartNumber()-1;j<course.getEndNumber();j++){
-                        tempCourseArray.get(i).set(j,course);
-                    }*/
-                    tempCourseArray.get(i).set(course.getWeekDay()-1,course);
-                }
-            if(course.getIsOddWeek()==3)
-                for(int i:course.getWeeks()){
-                    /*for(int j=course.getStartNumber()-1;j<course.getEndNumber();j++){
-                        tempCourseArray.get(i-1).set(j,course);
-                    }*/
-                    tempCourseArray.get(i).set(course.getWeekDay()-1,course);
-                }
+            }
+            coursesOnWeek.sort(cmp);
         }
         courseArray=tempCourseArray;
     }
 
-    public ArrayList<ArrayList<Course>> getCourseArray(){
-        return  courseArray;
+
+    public ArrayList<Course> getCourseList(){
+        return  courseList;
     }
 
-    protected void setCourseArray(ArrayList<ArrayList<Course>> courseArray){
-        this.courseArray=courseArray;
+    public void setCourseList(ArrayList<Course> courseList){
+        this.courseList=courseList;
     }
+
 
     @Override
     public void onClick(View v) {
@@ -161,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.miniFab01:
+                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                startActivityForResult(intent,1);
                 hideFABMenu();
                 break;
             case R.id.miniFab02:

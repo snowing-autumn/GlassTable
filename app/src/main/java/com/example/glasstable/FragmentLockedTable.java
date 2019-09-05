@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,8 @@ import java.util.zip.Inflater;
 
 public class FragmentLockedTable extends Fragment {
     private Context mContext;
-    private ArrayList<ArrayList<Course>> mCoursesArray;
+
+    private ArrayList<Course> mCoursesList;
     //时间列
     private RecyclerView mNumberRecyclerView;
     //课程格
@@ -47,15 +50,36 @@ public class FragmentLockedTable extends Fragment {
     //获取系统日期
     private Calendar mCalendar=Calendar.getInstance();
 
+    //一节课的高度
+    private int mCourseHeightDp;
+
+
+    //一节课的宽度
+    private int mCourseWidthDp;
+
+    public static FragmentLockedTable newInstance(ArrayList<Course> courses){
+        FragmentLockedTable fragmentLockedTable=new FragmentLockedTable();
+        fragmentLockedTable.setCoursesList(courses);
+        return fragmentLockedTable;
+    }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mCoursesArray=((MainActivity)getActivity()).getCourseArray();
-
+        mCoursesList=((MainActivity)getActivity()).getCourseList();
+        mContext=getActivity();
         View table=inflater.inflate(R.layout.locked_table,container,false);
+        //RecyclerView初始化
         mNumberRecyclerView =(RecyclerView) table.findViewById(R.id.lockedCowView);
+        mNumberRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        TimeAdapter timeAdapter=new TimeAdapter(courseTime.getInstance(),getActivity());
+        mNumberRecyclerView.setAdapter(timeAdapter);
         mCourseRecyclerView=(RecyclerView)table.findViewById(R.id.unlockedRecyclerView);
+        mCourseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(7,StaggeredGridLayoutManager.VERTICAL));
+        CourseAdapter courseAdapter=new CourseAdapter(mCoursesList,mContext);
+        mCourseRecyclerView.setAdapter(courseAdapter);
+        //ScrollView初始化
         mWeekScrollView=(MyHorizontalScrollView) table.findViewById(R.id.lockedRowView);
         mCourseScrollView=(MyHorizontalScrollView)table.findViewById(R.id.unlockedScrollView);
         mWeekScrollView.setMyScrollChangeListener(new MyHorizontalScrollView.OnMyScrollViewChangeListener() {
@@ -70,6 +94,12 @@ public class FragmentLockedTable extends Fragment {
                 ScrollAllScrollView(scrollX,scrollY);
             }
         });
+        //左上角方格初始化
+        mLiftTopTextView=(TextView) table.findViewById(R.id.textCorner);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DisplayUtil.dip2px(mContext,16)
+                ,DisplayUtil.dip2px(mContext,16));
+        mLiftTopTextView.setLayoutParams(layoutParams);
+        //周&&日期初始化
         initHeader();
         return table;
     }
@@ -90,7 +120,7 @@ public class FragmentLockedTable extends Fragment {
         mWeekList.add("周日");
         mWeekLineLayout=new LinearLayout(getActivity());
         LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT);
 mWeekLineLayout.setLayoutParams(layoutParams);
         mWeekLineLayout.setOrientation(LinearLayout.HORIZONTAL);
         //绘制单元格
@@ -99,6 +129,7 @@ mWeekLineLayout.setLayoutParams(layoutParams);
             TextView mWeekTextView=(TextView)mWeekCardView.findViewById(R.id.weekDayText);
             TextView mDayTextView=(TextView)mWeekCardView.findViewById(R.id.dayText);
             mWeekTextView.setText(mWeekList.get(i));
+            mWeekTextView.setLayoutParams(layoutParams);
             mDayTextView.setText(getDay(1,1));
             mWeekLineLayout.addView(mWeekCardView);
             //分割线
@@ -119,46 +150,18 @@ mWeekLineLayout.setLayoutParams(layoutParams);
         return "";
     }
 
-    private  ArrayList<ArrayList<String>> tableConstruct(){
-        ArrayList<ArrayList<String>> table=new ArrayList<>();
-        ArrayList<String> date=new ArrayList<>();
-        mCoursesArray=((MainActivity)getActivity()).getCourseArray();
-        date.add("星期一");
-        date.add("星期二");
-        date.add("星期三");
-        date.add("星期四");
-        date.add("星期五");
-        date.add("星期六");
-        date.add("星期日");
-        table.add(date);
-        if(mCoursesArray==null) {
-            for (int i = 0; i < 12; i++) {
-                ArrayList<String> temp = new ArrayList<>();
-                for (int j = 0; j < 8; j++) {
-                    if (j == 0)
-                        temp.add("第" + (i + 1) + "节");
-                    else
-                        temp.add("" + i * 12 + j);
-                }
-                table.add(temp);
-            }
-        }else {
-            for (int i = 0; i < 12; i++) {
-                ArrayList<String> temp = new ArrayList<>();
-                for (int j = 0; j < 8; j++) {
-                    if (j == 0)
-                        temp.add("第" + (i + 1) + "节");
-                    else
-                        temp.add(mCoursesArray.get(i).get(j-1).getCourseName());
-                }
-                table.add(temp);
-            }
-        }
-        return table;
+
+    public void setCourseHeightDp(int courseHeightDp) {
+        mCourseHeightDp = courseHeightDp;
     }
 
+    public void setCourseWidthDp(int courseWidthDp) {
+        mCourseWidthDp = courseWidthDp;
+    }
 
-
+    private void setCoursesList(ArrayList<Course> coursesList) {
+        mCoursesList = coursesList;
+    }
 
 }
 

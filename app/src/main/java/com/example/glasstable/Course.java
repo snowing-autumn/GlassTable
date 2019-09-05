@@ -37,6 +37,30 @@ public class Course implements Serializable {
         this(" "," "," ",-1,-1,-1,-1,-1,-1);
     }
 
+    public void initWeek(){
+        if(weeks!=null)
+            return;
+        else {
+            weeks=new ArrayList<>();
+            switch (isOddWeek) {
+                case 0:
+                    for (int i = startWeek; i <= endWeek; i++)
+                        if (i % 2 == 0)
+                            addWeek(i);
+                    break;
+                case 1:
+                    for (int i = startWeek; i <= endWeek; i++)
+                        if (i % 2 == 1)
+                            addWeek(i);
+                    break;
+                case 2:
+                    for (int i = startWeek; i <= endWeek; i++)
+                        addWeek(i);
+                    break;
+            }
+        }
+    }
+
     public int getStartNumber() {
         return startNumber;
     }
