@@ -25,6 +25,17 @@ public class Course implements Serializable {
         this.startNumber=startNumber;
         this.endNumber=endNumber;
         this.weekDay=weekDay;
+
+    }
+
+    public Course(int weekDay,int startNumber,int endNumber){
+        this.startNumber=startNumber;
+        this.endNumber=endNumber;
+        this.weekDay=weekDay;
+        this.courseName="";
+        this.teacherName="";
+        this.classroom="";
+        this.isOddWeek=5;
     }
 
     public void addWeek(int i){

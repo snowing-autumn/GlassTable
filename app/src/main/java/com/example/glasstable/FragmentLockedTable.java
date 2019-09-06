@@ -59,7 +59,7 @@ public class FragmentLockedTable extends Fragment {
 
     public static FragmentLockedTable newInstance(ArrayList<Course> courses){
         FragmentLockedTable fragmentLockedTable=new FragmentLockedTable();
-        fragmentLockedTable.setCoursesList(courses);
+        fragmentLockedTable.setCoursesList(courses==null?new ArrayList<Course>():courses);
         return fragmentLockedTable;
     }
 
@@ -67,7 +67,6 @@ public class FragmentLockedTable extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mCoursesList=((MainActivity)getActivity()).getCourseList();
         mContext=getActivity();
         View table=inflater.inflate(R.layout.locked_table,container,false);
         //RecyclerView初始化
@@ -76,7 +75,7 @@ public class FragmentLockedTable extends Fragment {
         TimeAdapter timeAdapter=new TimeAdapter(courseTime.getInstance(),getActivity());
         mNumberRecyclerView.setAdapter(timeAdapter);
         mCourseRecyclerView=(RecyclerView)table.findViewById(R.id.unlockedRecyclerView);
-        mCourseRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(7,StaggeredGridLayoutManager.VERTICAL));
+        mCourseRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),7,GridLayoutManager.VERTICAL,false));
         CourseAdapter courseAdapter=new CourseAdapter(mCoursesList,mContext);
         mCourseRecyclerView.setAdapter(courseAdapter);
         //ScrollView初始化

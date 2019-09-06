@@ -51,13 +51,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fbEdit=(FloatingActionButton)findViewById(R.id.fabMenu);
         fbEdit.setOnClickListener(this);
 
+        courseArray=new ArrayList<ArrayList<Course>>();
+        courseArray.add(new ArrayList<Course>());
         mViewPager=(ViewPager) findViewById(R.id.pageView);
         FragmentManager pageFM=getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentPagerAdapter(pageFM) {
             @Override
             public Fragment getItem(int position) {
-                ArrayList<Course> coursesOnWeek=courseArray.get(position);
-                return FragmentLockedTable.newInstance(coursesOnWeek);
+                return FragmentLockedTable.newInstance(courseArray.get(position));
             }
 
             @Override
