@@ -3,54 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/lockHeadView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/white"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textCorner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/app_name"
             android:gravity="center"
             android:textColor="@color/lightBlue" />
 
         <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
             android:background="@color/white" />
 
-        <com.example.glasstable.MyHorizontalScrollView
-            android:id="@+id/lockedRowView"
+        <ScrollView
+            android:id="@+id/lockedCowView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
 
-        </com.example.glasstable.MyHorizontalScrollView>
+        </ScrollView>
     </LinearLayout>
+
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="3dp"
+        android:background="@color/deepBlue" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/lockedCowView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:id="@+id/lockedRowView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
         <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:background="@color/light_gray" />
 
-        <com.example.glasstable.MyHorizontalScrollView
+        <ScrollView
             android:scrollbars="none"
             android:id="@+id/unlockedScrollView"
             android:layout_width="match_parent"
@@ -58,11 +64,11 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/unlockedRecyclerView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             </android.support.v7.widget.RecyclerView>
 
-        </com.example.glasstable.MyHorizontalScrollView>
+        </ScrollView>
     </LinearLayout>
 </LinearLayout>

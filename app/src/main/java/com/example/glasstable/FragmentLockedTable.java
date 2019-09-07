@@ -10,7 +10,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,25 +29,23 @@ public class FragmentLockedTable extends Fragment {
     private Context mContext;
 
     private ArrayList<Course> mCoursesList;
-    //时间列
-    private RecyclerView mNumberRecyclerView;
+    //周行
+    private RecyclerView mWeekRecyclerView;
     //课程格
     private RecyclerView mCourseRecyclerView;
     //左上角文本区
     private TextView mLiftTopTextView;
     //上下滑动区域
     private ArrayList<HorizontalScrollView> mScrollViews;
-    //第一行布局(周)
-    private LinearLayout mWeekLineLayout;
-    //第一行滑动视图
-    private MyHorizontalScrollView mWeekScrollView;
+    //第一列布局(时间)
+    private LinearLayout mNumLineLayout;
+    //第一列滑动视图
+    private ScrollView mNumScrollView;
     //主课程滑动视图
-    private MyHorizontalScrollView mCourseScrollView;
+    private ScrollView mCourseScrollView;
 
     //左侧课程时间
     private ArrayList<courseTime> mCourseTimes=courseTime.getInstance();
-    //获取系统日期
-    private Calendar mCalendar=Calendar.getInstance();
 
     //一节课的高度
     private int mCourseHeightDp;
@@ -69,94 +66,96 @@ public class FragmentLockedTable extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext=getActivity();
         View table=inflater.inflate(R.layout.locked_table,container,false);
+        //左上角方格初始化
+        mLiftTopTextView=(TextView) table.findViewById(R.id.textCorner);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                , ViewGroup.LayoutParams.WRAP_CONTENT);
+        mLiftTopTextView.setLayoutParams(layoutParams);
         //RecyclerView初始化
-        mNumberRecyclerView =(RecyclerView) table.findViewById(R.id.lockedCowView);
-        mNumberRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        TimeAdapter timeAdapter=new TimeAdapter(courseTime.getInstance(),getActivity());
-        mNumberRecyclerView.setAdapter(timeAdapter);
+        mWeekRecyclerView =(RecyclerView) table.findViewById(R.id.lockedRowView);
+        mWeekRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (RecyclerView.SCROLL_STATE_IDLE != recyclerView.getScrollState()) {
+                    mCourseRecyclerView.scrollBy(dx, dy);
+                }
+            }
+        });
+        mWeekRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        WeekAdapter weekAdapter=new WeekAdapter(getActivity());
+        mWeekRecyclerView.setAdapter(weekAdapter);
         mCourseRecyclerView=(RecyclerView)table.findViewById(R.id.unlockedRecyclerView);
-        mCourseRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),21,GridLayoutManager.VERTICAL,false));
+        mCourseRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (RecyclerView.SCROLL_STATE_IDLE != recyclerView.getScrollState()) {
+                    mWeekRecyclerView.scrollBy(dx, dy);
+                }
+            }
+        });
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(getActivity(),12,GridLayoutManager.HORIZONTAL,false);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return mCourseRecyclerView.getAdapter().getItemViewType(position);
+            }
+        });
+        mCourseRecyclerView.setLayoutManager(gridLayoutManager);
         CourseAdapter courseAdapter=new CourseAdapter(mCoursesList,mContext);
         mCourseRecyclerView.setAdapter(courseAdapter);
         //ScrollView初始化
-        mWeekScrollView=(MyHorizontalScrollView) table.findViewById(R.id.lockedRowView);
-        mCourseScrollView=(MyHorizontalScrollView)table.findViewById(R.id.unlockedScrollView);
-        mWeekScrollView.setMyScrollChangeListener(new MyHorizontalScrollView.OnMyScrollViewChangeListener() {
+        mNumScrollView=(ScrollView) table.findViewById(R.id.lockedCowView);
+        mCourseScrollView=(ScrollView)table.findViewById(R.id.unlockedScrollView);
+        mNumScrollView.setOnScrollChangeListener(new ScrollView.OnScrollChangeListener() {
             @Override
-            public void OnOnMyScrollViewChange(MyHorizontalScrollView myHorizontalScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 ScrollAllScrollView(scrollX,scrollY);
             }
         });
-        mCourseScrollView.setMyScrollChangeListener(new MyHorizontalScrollView.OnMyScrollViewChangeListener() {
+        mCourseScrollView.setOnScrollChangeListener(new ScrollView.OnScrollChangeListener(){
             @Override
-            public void OnOnMyScrollViewChange(MyHorizontalScrollView myHorizontalScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 ScrollAllScrollView(scrollX,scrollY);
             }
         });
-        //左上角方格初始化
-        mLiftTopTextView=(TextView) table.findViewById(R.id.textCorner);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DisplayUtil.dip2px(mContext,16)
-                ,DisplayUtil.dip2px(mContext,16));
-        mLiftTopTextView.setLayoutParams(layoutParams);
-        //周&&日期初始化
-        initHeader();
+
+        //时间初始化
+        initCow();
         return table;
     }
 
     private void ScrollAllScrollView(int x,int y){
         mCourseScrollView.scrollTo(x,y);
-        mWeekScrollView.scrollTo(x,y);
+        mNumScrollView.scrollTo(x,y);
     }
 
-    private void initHeader(){
-        ArrayList<String> mWeekList=new ArrayList<>();
-        mWeekList.add("周一");
-        mWeekList.add("周二");
-        mWeekList.add("周三");
-        mWeekList.add("周四");
-        mWeekList.add("周五");
-        mWeekList.add("周六");
-        mWeekList.add("周日");
-        mWeekList.add("周一");
-        mWeekList.add("周二");
-        mWeekList.add("周三");
-        mWeekList.add("周四");
-        mWeekList.add("周五");
-        mWeekList.add("周六");
-        mWeekList.add("周日");
-        mWeekList.add("周一");
-        mWeekList.add("周二");
-        mWeekList.add("周三");
-        mWeekList.add("周四");
-        mWeekList.add("周五");
-        mWeekList.add("周六");
-        mWeekList.add("周日");
-        mWeekLineLayout=new LinearLayout(getActivity());
+    private void initCow(){
+        mNumLineLayout=new LinearLayout(getActivity());
         LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-mWeekLineLayout.setLayoutParams(layoutParams);
-        mWeekLineLayout.setOrientation(LinearLayout.HORIZONTAL);
-        //绘制单元格
-        for(int i=0;i<mWeekList.size();i++){
-            View mWeekCardView= LayoutInflater.from(getActivity()).inflate(R.layout.week_view,null);
-            TextView mWeekTextView=(TextView)mWeekCardView.findViewById(R.id.weekDayText);
-            TextView mDayTextView=(TextView)mWeekCardView.findViewById(R.id.dayText);
-            mWeekTextView.setText(mWeekList.get(i));
-            mWeekTextView.setLayoutParams(layoutParams);
-            mDayTextView.setText(getDay(1,1));
-            mWeekLineLayout.addView(mWeekCardView);
+        mNumLineLayout.setOrientation(LinearLayout.VERTICAL);
+        mNumLineLayout.setLayoutParams(layoutParams);
+        for(int i=0;i<mCourseTimes.size();i++){
+            View mNumCardView= LayoutInflater.from(getActivity()).inflate(R.layout.number_view,null);
+            TextView mStartTimeTextView=(TextView)mNumCardView.findViewById(R.id.startTimeText);
+            TextView mNumTextView=(TextView)mNumCardView.findViewById(R.id.numberText);
+            mStartTimeTextView.setText(""+mCourseTimes.get(i).getStartHour()+":"+mCourseTimes.get(i).getStartMinute());
+            mStartTimeTextView.setLayoutParams(layoutParams);
+            mNumTextView.setText(""+mCourseTimes.get(i).getNumber());
+            mNumLineLayout.addView(mNumCardView);
             //分割线
-            if (i != mWeekList.size()-1) {
+            if (i != mCourseTimes.size()-1) {
                 View splitView = new View(mContext);
-                ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(1,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
+                ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        5);
                 splitView.setLayoutParams(splitViewParmas);
                 splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
-                mWeekLineLayout.addView(splitView);
+                mNumLineLayout.addView(splitView);
             }
         }
-        mWeekScrollView.addView(mWeekLineLayout);
+        mNumScrollView.addView(mNumLineLayout);
     }
+
 
     private String getDay(int weekNum, int WeekDay){
         //获得第x周星期x为?月?日

@@ -171,4 +171,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     public int getItemCount() {
         return mCourseOnTable.size();
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mCourseOnTable.get(position).getEndNumber()-mCourseOnTable.get(position).getStartNumber()+1;
+    }
 }
