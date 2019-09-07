@@ -75,7 +75,7 @@ public class FragmentLockedTable extends Fragment {
         TimeAdapter timeAdapter=new TimeAdapter(courseTime.getInstance(),getActivity());
         mNumberRecyclerView.setAdapter(timeAdapter);
         mCourseRecyclerView=(RecyclerView)table.findViewById(R.id.unlockedRecyclerView);
-        mCourseRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),7,GridLayoutManager.VERTICAL,false));
+        mCourseRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),21,GridLayoutManager.VERTICAL,false));
         CourseAdapter courseAdapter=new CourseAdapter(mCoursesList,mContext);
         mCourseRecyclerView.setAdapter(courseAdapter);
         //ScrollView初始化
@@ -117,13 +117,27 @@ public class FragmentLockedTable extends Fragment {
         mWeekList.add("周五");
         mWeekList.add("周六");
         mWeekList.add("周日");
+        mWeekList.add("周一");
+        mWeekList.add("周二");
+        mWeekList.add("周三");
+        mWeekList.add("周四");
+        mWeekList.add("周五");
+        mWeekList.add("周六");
+        mWeekList.add("周日");
+        mWeekList.add("周一");
+        mWeekList.add("周二");
+        mWeekList.add("周三");
+        mWeekList.add("周四");
+        mWeekList.add("周五");
+        mWeekList.add("周六");
+        mWeekList.add("周日");
         mWeekLineLayout=new LinearLayout(getActivity());
         LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 mWeekLineLayout.setLayoutParams(layoutParams);
         mWeekLineLayout.setOrientation(LinearLayout.HORIZONTAL);
         //绘制单元格
-        for(int i=0;i<7;i++){
+        for(int i=0;i<mWeekList.size();i++){
             View mWeekCardView= LayoutInflater.from(getActivity()).inflate(R.layout.week_view,null);
             TextView mWeekTextView=(TextView)mWeekCardView.findViewById(R.id.weekDayText);
             TextView mDayTextView=(TextView)mWeekCardView.findViewById(R.id.dayText);
@@ -132,7 +146,7 @@ mWeekLineLayout.setLayoutParams(layoutParams);
             mDayTextView.setText(getDay(1,1));
             mWeekLineLayout.addView(mWeekCardView);
             //分割线
-            if (i != 6) {
+            if (i != mWeekList.size()-1) {
                 View splitView = new View(mContext);
                 ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(1,
                         ViewGroup.LayoutParams.MATCH_PARENT);

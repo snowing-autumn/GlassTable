@@ -18,12 +18,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     private ArrayList<Course> mEmptyCourse;
     private ArrayList<ConflictedCourse> mConflictedCourses;
 
+
     public CourseAdapter(ArrayList<Course> mCourses, Context mContext){
         mConflictedCourses=new ArrayList<>();
         mCourseOnTable=new ArrayList<>();
         mEmptyCourse=new ArrayList<>();
         this.mCourses=mCourses;
         this.mContext=mContext;
+        genetateTestData();
         initCourse();
     }
 
@@ -56,6 +58,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
         }
     }
 
+    private void genetateTestData(){
+        for(int i=0;i<7;i++)
+            for(int j=0;j<12;j++){
+                Course course=new Course(i+1,j+1,j+2);
+                course.setCourseName("Test"+i);
+                mCourses.add(course);
+            }
+    }
+
     private void findConflictedCourse(){
         int[] flag=new int[84];
         for(int i=0;i<84;i++)
@@ -86,8 +97,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
         for(int i=0;i<84;i++)
             flag[i]=0;
         for(ConflictedCourse conflictedCourse:mConflictedCourses){
-            int startPosition=conflictedCourse.getWeekDay()*12+conflictedCourse.getStatTime();
-            int endPosition=conflictedCourse.getWeekDay()*12+conflictedCourse.getEndTime();
+            int startPosition=(conflictedCourse.getWeekDay()-1)*12+conflictedCourse.getStatTime()-1;
+            int endPosition=(conflictedCourse.getWeekDay()-1)*12+conflictedCourse.getEndTime()-1;
             for(int j=startPosition;j<endPosition;j++) {
                 flag[j]++;
             }
