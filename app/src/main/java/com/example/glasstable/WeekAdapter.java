@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,8 +19,10 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekHolder> {
     private Calendar mCalendar=Calendar.getInstance();
     //周
     private ArrayList<String> mWeekDay;
+    private int mWeekWidthPx;
+    private int mWeekHeighPx;
 
-    public WeekAdapter(Context context){
+    public WeekAdapter(Context context,int weekHeighPx,int weekWidthPx){
 
         mContext=context;
         mWeekDay=new ArrayList<>();
@@ -29,6 +33,8 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekHolder> {
         mWeekDay.add("周五");
         mWeekDay.add("周六");
         mWeekDay.add("周日");
+        mWeekHeighPx=weekHeighPx;
+        mWeekWidthPx=weekWidthPx;
     }
 
     class WeekHolder extends RecyclerView.ViewHolder{
@@ -50,7 +56,10 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.WeekHolder> {
 
     @Override
     public WeekHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        WeekHolder weekHolder=new WeekHolder(LayoutInflater.from(mContext).inflate(R.layout.week_view,parent,false));
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(mWeekWidthPx,mWeekHeighPx);
+        View view= LayoutInflater.from(mContext).inflate(R.layout.week_view,parent,false);
+        view.setLayoutParams(layoutParams);
+        WeekHolder weekHolder=new WeekHolder(view);
         return weekHolder;
     }
 

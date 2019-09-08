@@ -37,8 +37,8 @@
 
     <View
         android:layout_height="match_parent"
-        android:layout_width="3dp"
-        android:background="@color/deepBlue" />
+        android:layout_width="1dp"
+        android:background="@color/deep_gray" />
 
     <LinearLayout
         android:layout_width="match_parent"

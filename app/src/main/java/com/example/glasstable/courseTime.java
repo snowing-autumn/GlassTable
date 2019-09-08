@@ -20,9 +20,9 @@ public class courseTime {
     public static ArrayList<courseTime> getInstance(){
         ArrayList<courseTime> TimebarData=new ArrayList<>();
         for(int i=0;i<4;i++)
-            TimebarData.add(new courseTime(i,i+8,i%2==0?30:25,i+9,i%2==0?15:10));
+            TimebarData.add(new courseTime(i+1,i+8,i%2==0?30:25,i+9,i%2==0?15:10));
         for(int i=4;i<8;i++)
-            TimebarData.add(new courseTime(i,i+10,i%2==0?30:25,i+11,i%2==0?15:10));
+            TimebarData.add(new courseTime(i+1,i+10,i%2==0?30:25,i+11,i%2==0?15:10));
         TimebarData.add(new courseTime(9,19,0,19,45));
         TimebarData.add(new courseTime(10,19,55,20,40));
         TimebarData.add(new courseTime(11,20,50,21,35));

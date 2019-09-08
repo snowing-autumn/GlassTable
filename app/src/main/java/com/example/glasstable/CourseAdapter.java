@@ -3,13 +3,18 @@ package com.example.glasstable;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import static android.content.ContentValues.TAG;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHolder> {
     private ArrayList<Course> mCourses;
@@ -17,16 +22,24 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     private ArrayList<Course> mCourseOnTable;
     private ArrayList<Course> mEmptyCourse;
     private ArrayList<ConflictedCourse> mConflictedCourses;
+    private int mCourseWidthPx;
+    private int mCourseHeigthtPx;
 
 
-    public CourseAdapter(ArrayList<Course> mCourses, Context mContext){
+    public CourseAdapter(ArrayList<Course> mCourses, Context mContext,int courseHeigthtPx,int courseWidthPx){
         mConflictedCourses=new ArrayList<>();
         mCourseOnTable=new ArrayList<>();
         mEmptyCourse=new ArrayList<>();
         this.mCourses=mCourses;
         this.mContext=mContext;
-        genetateTestData();
+        mCourseHeigthtPx=courseHeigthtPx;
+        mCourseWidthPx=courseWidthPx;
+        if(this.mCourses.size()==0)
+            genetateTestData();
         initCourse();
+        for(Course course:mCourseOnTable)
+            Log.d(TAG, course.getCourseName()+course.getWeekDay()+"周   "+course.getStartNumber()+"-"
+            +course.getEndNumber());
     }
 
     class CourseHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
@@ -60,9 +73,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
 
     private void genetateTestData(){
         for(int i=0;i<7;i++)
-            for(int j=0;j<12;j++){
-                Course course=new Course(i+1,j+1,j+2);
-                course.setCourseName("Test"+i);
+            for(int j=0;j<6;j++){
+                Course course=new Course(i+1,j*2+1,j*2+2);
+                course.setCourseName("Test"+(i*6+j));
                 mCourses.add(course);
             }
     }
@@ -110,15 +123,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             }
         });
         //添加空白课程
-        int start=0;
+        int start=1;
         int startWeekDay=1;
         for(int index=0;index<mConflictedCourses.size();index++){
             int end=mConflictedCourses.get(index).getStatTime();
             int endWeekDay=mConflictedCourses.get(index).getWeekDay();
-            if(endWeekDay-startWeekDay==0) {
+            //同一天课间隔或顺延至下一天
+            if(endWeekDay-startWeekDay==0||endWeekDay-startWeekDay==1&&start==12&&end==1) {
                 //同一天课间隔
-                if (start - end > 0) {
-                    Course emptyCourse = new Course(startWeekDay, start, end);
+                if (end - start > 1) {
+                    Course emptyCourse = new Course(startWeekDay, start, end-1);
                     mEmptyCourse.add(emptyCourse);
                     mCourseOnTable.add(emptyCourse);
                 }
@@ -127,16 +141,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
                 for(int re=0;re<endWeekDay-startWeekDay;re++) {
                     Course emptyCourse;
                     if(re==0)
-                         emptyCourse= new Course(startWeekDay+re, start, 12);
+                         emptyCourse= new Course(startWeekDay+re, start+1, 12);
                     else
                         emptyCourse = new Course(startWeekDay+re, 1, 12);
                     mEmptyCourse.add(emptyCourse);
                     mCourseOnTable.add(emptyCourse);
                 }
                 start=0;
-                if(end-start>0) {
+                if(end-start>1) {
                     startWeekDay = mConflictedCourses.get(index).getWeekDay();
-                    Course emptyCourse = new Course(startWeekDay, start, 12);
+                    Course emptyCourse = new Course(startWeekDay, 1, end-1);
                     mEmptyCourse.add(emptyCourse);
                     mCourseOnTable.add(emptyCourse);
                 }
@@ -156,8 +170,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
 
     @Override
     public CourseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        CourseHolder mCourseHolder= new CourseHolder(LayoutInflater.from(mContext).inflate(R.layout.single_course_view,parent,false));
+        LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(mCourseWidthPx,mCourseHeigthtPx*viewType);
+        View view= LayoutInflater.from(mContext).inflate(R.layout.single_course_view,parent,false);
+        view.setLayoutParams(layoutParams);
+        CourseHolder mCourseHolder= new CourseHolder(view);
         return  mCourseHolder;
     }
 

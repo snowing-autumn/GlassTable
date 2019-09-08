@@ -35,9 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout fbDocker;
     private ArrayList<Course> courseList;
     private ArrayList<ArrayList<Course>> courseArray;
-    private Fragment tableFragment;
     private ViewPager mViewPager;
-
+    FragmentPagerAdapter fragmentPagerAdapter;
 
 
     @Override
@@ -51,11 +50,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fbEdit=(FloatingActionButton)findViewById(R.id.fabMenu);
         fbEdit.setOnClickListener(this);
 
-        courseArray=new ArrayList<ArrayList<Course>>();
+        courseArray=new ArrayList<>();
         courseArray.add(new ArrayList<Course>());
         mViewPager=(ViewPager) findViewById(R.id.pageView);
         FragmentManager pageFM=getSupportFragmentManager();
-        mViewPager.setAdapter(new FragmentPagerAdapter(pageFM) {
+        fragmentPagerAdapter=new FragmentPagerAdapter(pageFM) {
             @Override
             public Fragment getItem(int position) {
                 return FragmentLockedTable.newInstance(courseArray.get(position));
@@ -65,7 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public int getCount() {
                 return courseArray.size();
             }
-        });
+
+            @Override
+            public int getItemPosition(Object object) {
+                return POSITION_NONE;
+            }
+        };
+        mViewPager.setAdapter(fragmentPagerAdapter);
 
         /*FragmentManager fm = getSupportFragmentManager();
         tableFragment = fm.findFragmentById(R.id.courseTable);
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(requestCode==1)
         courseList=(ArrayList<Course>)data.getSerializableExtra("courseList");
         courseListToArray(courseList);
-
+        fragmentPagerAdapter.notifyDataSetChanged();
     }
 
     private void courseListToArray(ArrayList<Course> mcourseList){
@@ -117,11 +122,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for(int i=0;i<20;i++){
             ArrayList<Course> coursesOnWeek=new ArrayList<>();
             for(Course course:courseList) {
-                if(course.getWeeks().contains(i)){
+                if(course.getWeeks().contains(i+1)){
                     coursesOnWeek.add(course);
                 }
             }
             coursesOnWeek.sort(cmp);
+            tempCourseArray.add(coursesOnWeek);
         }
         courseArray=tempCourseArray;
     }
@@ -181,4 +187,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fbEdit.setImageResource(R.mipmap.ic_edit_white_24dp);
         isAdd = false;
     }
+
 }

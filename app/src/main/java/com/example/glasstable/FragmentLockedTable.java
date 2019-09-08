@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,6 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.zip.Inflater;
 
 
 public class FragmentLockedTable extends Fragment {
@@ -50,9 +48,14 @@ public class FragmentLockedTable extends Fragment {
     //一节课的高度
     private int mCourseHeightDp;
 
-
     //一节课的宽度
     private int mCourseWidthDp;
+
+    //左上角宽度
+    private int mCornerWidthDp;
+
+    //左上角高度
+    private int mCornerHeightDp;
 
     public static FragmentLockedTable newInstance(ArrayList<Course> courses){
         FragmentLockedTable fragmentLockedTable=new FragmentLockedTable();
@@ -65,11 +68,15 @@ public class FragmentLockedTable extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext=getActivity();
+        mCourseHeightDp= DisplayUtil.px2dip(mContext,DisplayUtil.getPhoneHeightPx(mContext))/10;
+        mCourseWidthDp= DisplayUtil.px2dip(mContext,DisplayUtil.getPhoneWidthPx(mContext))/7;
+        mCornerHeightDp= DisplayUtil.px2dip(mContext,DisplayUtil.getPhoneHeightPx(mContext))/12;
+        mCornerWidthDp= DisplayUtil.px2dip(mContext,DisplayUtil.getPhoneWidthPx(mContext))/8;
         View table=inflater.inflate(R.layout.locked_table,container,false);
         //左上角方格初始化
         mLiftTopTextView=(TextView) table.findViewById(R.id.textCorner);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                , ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DisplayUtil.dip2px(mContext,mCornerWidthDp)
+                , DisplayUtil.dip2px(mContext,mCornerHeightDp));
         mLiftTopTextView.setLayoutParams(layoutParams);
         //RecyclerView初始化
         mWeekRecyclerView =(RecyclerView) table.findViewById(R.id.lockedRowView);
@@ -82,7 +89,7 @@ public class FragmentLockedTable extends Fragment {
             }
         });
         mWeekRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        WeekAdapter weekAdapter=new WeekAdapter(getActivity());
+        WeekAdapter weekAdapter=new WeekAdapter(mContext,DisplayUtil.dip2px(mContext,mCornerHeightDp),DisplayUtil.dip2px(mContext,mCourseWidthDp));
         mWeekRecyclerView.setAdapter(weekAdapter);
         mCourseRecyclerView=(RecyclerView)table.findViewById(R.id.unlockedRecyclerView);
         mCourseRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -101,7 +108,7 @@ public class FragmentLockedTable extends Fragment {
             }
         });
         mCourseRecyclerView.setLayoutManager(gridLayoutManager);
-        CourseAdapter courseAdapter=new CourseAdapter(mCoursesList,mContext);
+        CourseAdapter courseAdapter=new CourseAdapter(mCoursesList,mContext,DisplayUtil.dip2px(mContext,mCourseHeightDp),DisplayUtil.dip2px(mContext,mCourseWidthDp));
         mCourseRecyclerView.setAdapter(courseAdapter);
         //ScrollView初始化
         mNumScrollView=(ScrollView) table.findViewById(R.id.lockedCowView);
@@ -131,8 +138,8 @@ public class FragmentLockedTable extends Fragment {
 
     private void initCow(){
         mNumLineLayout=new LinearLayout(getActivity());
-        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(DisplayUtil.dip2px(mContext,mCornerWidthDp),
+                DisplayUtil.dip2px(mContext,mCourseHeightDp));
         mNumLineLayout.setOrientation(LinearLayout.VERTICAL);
         mNumLineLayout.setLayoutParams(layoutParams);
         for(int i=0;i<mCourseTimes.size();i++){
@@ -140,14 +147,14 @@ public class FragmentLockedTable extends Fragment {
             TextView mStartTimeTextView=(TextView)mNumCardView.findViewById(R.id.startTimeText);
             TextView mNumTextView=(TextView)mNumCardView.findViewById(R.id.numberText);
             mStartTimeTextView.setText(""+mCourseTimes.get(i).getStartHour()+":"+mCourseTimes.get(i).getStartMinute());
-            mStartTimeTextView.setLayoutParams(layoutParams);
             mNumTextView.setText(""+mCourseTimes.get(i).getNumber());
+            mNumCardView.setLayoutParams(layoutParams);
             mNumLineLayout.addView(mNumCardView);
             //分割线
             if (i != mCourseTimes.size()-1) {
                 View splitView = new View(mContext);
                 ViewGroup.LayoutParams splitViewParmas = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        5);
+                        1);
                 splitView.setLayoutParams(splitViewParmas);
                 splitView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.light_gray));
                 mNumLineLayout.addView(splitView);
@@ -162,6 +169,21 @@ public class FragmentLockedTable extends Fragment {
         return "";
     }
 
+    public int getCourseHeightDp() {
+        return mCourseHeightDp;
+    }
+
+    public int getCourseWidthDp() {
+        return mCourseWidthDp;
+    }
+
+    public int getCornerWidthDp() {
+        return mCornerWidthDp;
+    }
+
+    public int getCornerHeightDp() {
+        return mCornerHeightDp;
+    }
 
     public void setCourseHeightDp(int courseHeightDp) {
         mCourseHeightDp = courseHeightDp;

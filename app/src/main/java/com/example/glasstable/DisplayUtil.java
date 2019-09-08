@@ -17,4 +17,12 @@ public class DisplayUtil {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    public static int getPhoneWidthPx(Context context){
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getPhoneHeightPx(Context context){
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+
 }
