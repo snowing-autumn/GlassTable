@@ -80,7 +80,7 @@ public class FragmentLockedTable extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DisplayUtil.dip2px(mContext,mCornerWidthDp)
                 , DisplayUtil.dip2px(mContext,mCornerHeightDp));
         mLiftTopTextView.setLayoutParams(layoutParams);
-        mLiftTopTextView.setText(""+mWeekNum);
+        mLiftTopTextView.setText("第"+(1+mWeekNum)+"周");
         //RecyclerView初始化
         mWeekRecyclerView =(RecyclerView) table.findViewById(R.id.lockedRowView);
         mWeekRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

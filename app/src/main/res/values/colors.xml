@@ -8,6 +8,7 @@
     <color name="lightBlue">#2222FF</color>
 
     <color name="pureWhite">#FFFFFFFF</color>
+    <color name="pureDark">#FF000000</color>
 
     <color name="ivory">#FFFFF0</color>
     <!-- 象牙色 -->

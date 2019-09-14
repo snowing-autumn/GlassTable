@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,8 +16,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,6 +51,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences sharedPreferences=getPreferences(MODE_PRIVATE);
+        String array=sharedPreferences.getString("Array","");
+        if(array.length()!=0) {
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(array.getBytes());
+            try {
+                ObjectInputStream ois = new ObjectInputStream(byteArrayInputStream);
+                courseArray = (ArrayList<ArrayList<Course>>) ois.readObject();
+                ois.close();
+                byteArrayInputStream.close();
+            } catch (IOException ioe) {
+                System.out.println("IOError");
+            } catch (ClassNotFoundException cnfe) {
+                System.out.println("IOError");
+            }
+        }
 
         setContentView(R.layout.activity_main);
         getWindow().setBackgroundDrawableResource(R.drawable.ww2);
@@ -51,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fbEdit.setOnClickListener(this);
 
         courseArray=new ArrayList<>();
-        courseArray.add(new ArrayList<Course>());
         mViewPager=(ViewPager) findViewById(R.id.pageView);
         FragmentManager pageFM=getSupportFragmentManager();
         fragmentPagerAdapter=new FragmentPagerAdapter(pageFM) {
@@ -97,6 +119,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor=getPreferences(MODE_PRIVATE).edit();
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        try{
+            ObjectOutputStream oos=new ObjectOutputStream(byteArrayOutputStream);
+            oos.writeObject(courseArray);
+            editor.putString("Array",byteArrayOutputStream.toString());
+            editor.commit();
+            oos.close();
+            byteArrayOutputStream.close();
+        }catch (IOException e){
+            System.out.println("IOError");
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

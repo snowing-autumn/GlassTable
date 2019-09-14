@@ -63,8 +63,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
                 String info = course.getCourseName() + "\n" + course.getClassroom();
                 mTextView.setText(info);
                 mCardView.setBackgroundColor(mContext.getColor(course.getColor()));
-                mCardView.setAlpha((float)0.7);
+                mCardView.setAlpha((float)0.8);
                 mTextView.setTextColor(mContext.getColor(R.color.pureWhite));
+            }else {
+                mCardView.setAlpha((float)0);
             }
         }
 
@@ -81,12 +83,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     }
 
     private void genetateTestData(){
-        for(int i=0;i<7;i++)
-            for(int j=0;j<6;j++){
-                Course course=new Course(i+1,j*2+1,j*2+2);
-                course.setCourseName("Test"+(i*6+j));
-                mCourses.add(course);
-            }
+        for(int i=0;i<7;i++){
+            Course course=new Course(i+1,1,12);
+            mCourses.add(course);
+        }
     }
 
     private void findConflictedCourse(){
@@ -174,6 +174,18 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             }
             start=mConflictedCourses.get(index).getEndTime();
             startWeekDay=mConflictedCourses.get(index).getWeekDay();
+        }
+        if(startWeekDay!=7){
+            if(start!=12){
+                Course emptyCourse=new Course(startWeekDay,start+1,12);
+                mEmptyCourse.add(emptyCourse);
+                mCourseOnTable.add(emptyCourse);
+            }
+            for(int i=startWeekDay+1;i<=7;i++){
+                Course emptyCourse=new Course(startWeekDay,1,12);
+                mEmptyCourse.add(emptyCourse);
+                mCourseOnTable.add(emptyCourse);
+            }
         }
 
     }

@@ -10,6 +10,8 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/azure"
+        android:alpha="0.8"
         android:id="@+id/weekCardView"
         android:layout_gravity="center"
         card_view:cardElevation="24dp">
@@ -22,6 +24,7 @@
 
             <TextView
                 android:id="@+id/weekDayText"
+                android:textColor="@color/pureDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -29,6 +32,7 @@
 
             <TextView
                 android:id="@+id/dayText"
+                android:textColor="@color/pureDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"

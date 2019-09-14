@@ -9,6 +9,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/azure"
+        android:alpha="0.8"
         android:id="@+id/numberCardView">
 
         <LinearLayout
@@ -19,6 +21,7 @@
 
             <TextView
                 android:id="@+id/startTimeText"
+                android:textColor="@color/pureDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
@@ -30,6 +33,7 @@
 
             <TextView
                 android:id="@+id/numberText"
+                android:textColor="@color/pureDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
