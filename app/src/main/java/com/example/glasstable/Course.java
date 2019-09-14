@@ -14,6 +14,7 @@ public class Course implements Serializable {
     private int endNumber;
     private int weekDay;
     private ArrayList<Integer> weeks=null;
+    private int color;
 
     public Course(String courseName, String teacherName, String classroom, int startWeek, int endWeek, int isOddWeek, int startNumber,int endNumber, int weekDay) {
         this.courseName = courseName;
@@ -70,6 +71,14 @@ public class Course implements Serializable {
                     break;
             }
         }
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public int getStartNumber() {

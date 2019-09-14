@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,8 +21,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     private ArrayList<Course> mCourseOnTable;
     private ArrayList<Course> mEmptyCourse;
     private ArrayList<ConflictedCourse> mConflictedCourses;
+    private int mColorIndex=0;
     private int mCourseWidthPx;
     private int mCourseHeigthtPx;
+    private int[] mColor={R.color.powderblue,R.color.tomato,
+            R.color.mediumslateblue, R.color.royalblue,
+            R.color.forestgreen, R.color.darkviolet,
+            R.color.crimson, R.color.orangered,
+            R.color.burlywood
+    };
 
 
     public CourseAdapter(ArrayList<Course> mCourses, Context mContext,int courseHeigthtPx,int courseWidthPx){
@@ -48,7 +54,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
 
         public CourseHolder(View itemView){
             super(itemView);
-            mCardView=(CardView)itemView.findViewById(R.id.numberCardView);
+            mCardView=(CardView)itemView.findViewById(R.id.courseCardView);
             mTextView=(TextView)itemView.findViewById(R.id.courseInfo);
         }
 
@@ -56,6 +62,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             if(course.getCourseName()!="") {
                 String info = course.getCourseName() + "\n" + course.getClassroom();
                 mTextView.setText(info);
+                mCardView.setBackgroundColor(mContext.getColor(course.getColor()));
+                mCardView.setAlpha((float)0.7);
+                mTextView.setTextColor(mContext.getColor(R.color.pureWhite));
             }
         }
 
@@ -86,12 +95,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             flag[i]=0;
         //课程冲突查找
         for(Course course:mCourses){
+            setCourseColor(course);
             ConflictedCourse tempConflictedCourse=new ConflictedCourse(course.getWeekDay(),course.getStartNumber(),course.getEndNumber(),course.getCourseName());
             tempConflictedCourse.addCourse(course);
             mConflictedCourses.add(tempConflictedCourse);
             boolean conflicted=false;
-            int startPosition=course.getWeekDay()*12+course.getStartNumber();
-            int endPosition=course.getWeekDay()*12+course.getEndWeek();
+            int startPosition=(course.getWeekDay()-1)*12+course.getStartNumber()-1;
+            int endPosition=(course.getWeekDay()-1)*12+course.getEndNumber()-1;
             for(int j=startPosition;j<endPosition;j++){
                 if(flag[j]>0)
                     conflicted=true;
@@ -123,7 +133,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             }
         });
         //添加空白课程
-        int start=1;
+        int start=0;
         int startWeekDay=1;
         for(int index=0;index<mConflictedCourses.size();index++){
             int end=mConflictedCourses.get(index).getStatTime();
@@ -132,7 +142,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
             if(endWeekDay-startWeekDay==0||endWeekDay-startWeekDay==1&&start==12&&end==1) {
                 //同一天课间隔
                 if (end - start > 1) {
-                    Course emptyCourse = new Course(startWeekDay, start, end-1);
+                    Course emptyCourse = new Course(startWeekDay, start+1, end-1);
                     mEmptyCourse.add(emptyCourse);
                     mCourseOnTable.add(emptyCourse);
                 }
@@ -191,5 +201,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseHold
     @Override
     public int getItemViewType(int position) {
         return mCourseOnTable.get(position).getEndNumber()-mCourseOnTable.get(position).getStartNumber()+1;
+    }
+
+    private void setCourseColor(Course course){
+        course.setColor(mColor[mColorIndex%9]);
+        mColorIndex++;
     }
 }

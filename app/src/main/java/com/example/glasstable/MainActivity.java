@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentPagerAdapter=new FragmentPagerAdapter(pageFM) {
             @Override
             public Fragment getItem(int position) {
-                return FragmentLockedTable.newInstance(courseArray.get(position));
+                return FragmentLockedTable.newInstance(courseArray.get(position),position);
             }
 
             @Override
@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ArrayList<Course> getCourseList(){
         return  courseList;
     }
+
+    public ArrayList<ArrayList<Course>> getCourseArray(){ return courseArray;}
 
     public void setCourseList(ArrayList<Course> courseList){
         this.courseList=courseList;

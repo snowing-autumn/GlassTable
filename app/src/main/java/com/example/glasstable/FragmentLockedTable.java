@@ -25,7 +25,8 @@ import java.util.ArrayList;
 
 public class FragmentLockedTable extends Fragment {
     private Context mContext;
-
+    //第几周
+    private int mWeekNum;
     private ArrayList<Course> mCoursesList;
     //周行
     private RecyclerView mWeekRecyclerView;
@@ -57,8 +58,9 @@ public class FragmentLockedTable extends Fragment {
     //左上角高度
     private int mCornerHeightDp;
 
-    public static FragmentLockedTable newInstance(ArrayList<Course> courses){
+    public static FragmentLockedTable newInstance(ArrayList<Course> courses, int weekNum){
         FragmentLockedTable fragmentLockedTable=new FragmentLockedTable();
+        fragmentLockedTable.mWeekNum=weekNum;
         fragmentLockedTable.setCoursesList(courses==null?new ArrayList<Course>():courses);
         return fragmentLockedTable;
     }
@@ -78,6 +80,7 @@ public class FragmentLockedTable extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DisplayUtil.dip2px(mContext,mCornerWidthDp)
                 , DisplayUtil.dip2px(mContext,mCornerHeightDp));
         mLiftTopTextView.setLayoutParams(layoutParams);
+        mLiftTopTextView.setText(""+mWeekNum);
         //RecyclerView初始化
         mWeekRecyclerView =(RecyclerView) table.findViewById(R.id.lockedRowView);
         mWeekRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
