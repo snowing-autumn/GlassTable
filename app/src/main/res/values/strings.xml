@@ -5,4 +5,5 @@
     <string name="loginCode">Code:</string>
     <string name="logoDescrbe">LoginLogo</string>
     <string name="codeDescribe">LoginCode</string>
+    <string name="login">登录</string>
 </resources>

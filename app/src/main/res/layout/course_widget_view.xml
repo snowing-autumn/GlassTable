@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/numWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/MondayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/TuesdayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/WednesdayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/ThursdayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/FridayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/SaturdayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+        <TextView
+            android:id="@+id/SundayWidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></TextView>
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/numWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/MondayWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/TuesdayWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/WednesdayWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/ThursdayWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/FridayWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/SaturdayWidgetContainer"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/SundayWidgetContainer"></LinearLayout>
+
+    </ListView>
+
+</LinearLayout>

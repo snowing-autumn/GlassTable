@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="186dp"
+        android:layout_height="211dp"
+        android:layout_marginTop="84dp"
+
+        android:contentDescription="@string/logoDescrbe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/username" />
+
     <EditText
         android:id="@+id/userName"
         android:layout_width="wrap_content"
@@ -32,47 +44,48 @@
         android:ems="10"
         android:inputType="textPassword"
         android:hint="@string/loginPasswd"
-        app:layout_constraintBottom_toTopOf="@+id/loginCode"
+        app:layout_constraintBottom_toTopOf="@+id/captchaLineLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/loginCode"
+
+    <LinearLayout
+        android:id="@+id/captchaLineLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/loginCode"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="404dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/codeImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.718" />
-
-    <ImageView
-        android:id="@+id/logoImage"
-        android:contentDescription="@string/logoDescrbe"
-        android:layout_width="186dp"
-        android:layout_height="211dp"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/userName"
+        app:layout_constraintHorizontal_bias="0.761"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ww3" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/codeImage"
-        android:layout_width="107dp"
-        android:layout_height="113dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/codeDescribe"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/loginCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="@string/loginCode"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/captchaLineLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.718" />
+
+        <ImageView
+            android:id="@+id/codeImage"
+            android:layout_width="107dp"
+            android:layout_height="113dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/codeDescribe"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/LoginOk"
@@ -80,7 +93,10 @@
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="140dp"
+        android:text="@string/login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/codeImage" />
+        app:layout_constraintHorizontal_bias="0.393"
+        app:layout_constraintStart_toStartOf="@+id/captchaLineLayout" />
 </android.support.constraint.ConstraintLayout>

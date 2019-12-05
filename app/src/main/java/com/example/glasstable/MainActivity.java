@@ -4,7 +4,6 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Intent;
 
-import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,15 +15,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -46,34 +46,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager mViewPager;
     FragmentPagerAdapter fragmentPagerAdapter;
 
+    private String FileName="coursedata";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences=getPreferences(MODE_PRIVATE);
-        String array=sharedPreferences.getString("Array","");
-        if(array.length()!=0) {
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(array.getBytes());
-            try {
-                ObjectInputStream ois = new ObjectInputStream(byteArrayInputStream);
-                courseArray = (ArrayList<ArrayList<Course>>) ois.readObject();
-                ois.close();
-                byteArrayInputStream.close();
-            } catch (IOException ioe) {
-                System.out.println("IOError");
-            } catch (ClassNotFoundException cnfe) {
-                System.out.println("IOError");
-            }
+        File file=new File(getFilesDir(),FileName);
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            courseList=(ArrayList<Course>)ois.readObject();
+            courseListToArray(courseList);
+        }catch (FileNotFoundException fnfe){
+            System.out.println(fnfe);
+        }catch (IOException ioe){
+            System.out.println(ioe);
+        }catch(ClassNotFoundException cnfe) {
+            System.out.println(cnfe);
         }
-
         setContentView(R.layout.activity_main);
         getWindow().setBackgroundDrawableResource(R.drawable.ww2);
 
         fbEdit=(FloatingActionButton)findViewById(R.id.fabMenu);
         fbEdit.setOnClickListener(this);
 
-        courseArray=new ArrayList<>();
+        if(courseArray==null)
+            courseArray=new ArrayList<>();
         mViewPager=(ViewPager) findViewById(R.id.pageView);
         FragmentManager pageFM=getSupportFragmentManager();
         fragmentPagerAdapter=new FragmentPagerAdapter(pageFM) {
@@ -93,15 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
         mViewPager.setAdapter(fragmentPagerAdapter);
-
-        /*FragmentManager fm = getSupportFragmentManager();
-        tableFragment = fm.findFragmentById(R.id.courseTable);
-
-        if (tableFragment == null) {
-            tableFragment = new FragmentLockedTable();
-            fm.beginTransaction().add(R.id.courseTable, tableFragment)
-                    .commit();
-        }*/
 
         fbDocker=(RelativeLayout)findViewById(R.id.rlAddBill);
         for (int i = 0; i < llId.length;i++){
@@ -123,18 +114,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences.Editor editor=getPreferences(MODE_PRIVATE).edit();
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
-        try{
-            ObjectOutputStream oos=new ObjectOutputStream(byteArrayOutputStream);
-            oos.writeObject(courseArray);
-            editor.putString("Array",byteArrayOutputStream.toString());
-            editor.commit();
+        String fileDir=getFilesDir().getAbsolutePath();
+        File file=new File(fileDir,FileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos=new ObjectOutputStream(fos);
+            oos.writeObject(courseList);
             oos.close();
-            byteArrayOutputStream.close();
-        }catch (IOException e){
+        }catch (IOException ioe){
             System.out.println("IOError");
         }
+
     }
 
 
