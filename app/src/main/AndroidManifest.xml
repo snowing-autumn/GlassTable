@@ -14,6 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <service android:name=".AppWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
+
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

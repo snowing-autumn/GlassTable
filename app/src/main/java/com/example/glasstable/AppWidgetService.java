@@ -1,6 +1,7 @@
 package com.example.glasstable;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViewsService;
 
 import java.io.File;
@@ -14,13 +15,15 @@ import java.util.Comparator;
 public class AppWidgetService extends RemoteViewsService {
 
     private ArrayList<Course> courseList;
-    private ArrayList<ArrayList<Course>> courseArray;
+    private ArrayList<ArrayList<Course>> courseArray=new ArrayList<>();
     private String FileName="coursedata";
 
     @Override
     public void onCreate() {
+
         super.onCreate();
-        File file=new File(getFilesDir(),FileName);
+
+        File file=new File(getApplication().getFilesDir(),FileName);
         try {
             FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois=new ObjectInputStream(fis);
@@ -34,6 +37,7 @@ public class AppWidgetService extends RemoteViewsService {
         }
         if(courseList.size()!=0)
             courseListToArray(courseList);
+
     }
 
     private void courseListToArray(ArrayList<Course> mcourseList){
@@ -61,9 +65,28 @@ public class AppWidgetService extends RemoteViewsService {
         courseArray=tempCourseArray;
     }
 
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+
+        File file=new File(getApplication().getFilesDir(),FileName);
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+            courseList=(ArrayList<Course>)ois.readObject();
+        }catch (FileNotFoundException fnfe){
+            System.out.println(fnfe);
+        }catch (IOException ioe){
+            System.out.println(ioe);
+        }catch(ClassNotFoundException cnfe) {
+            System.out.println(cnfe);
+        }
+        if(courseList.size()!=0)
+            courseListToArray(courseList);
+
+
         return new CourseAppWidgetFactory(getApplicationContext(),courseList);
+
     }
 }
 

@@ -12,41 +12,50 @@
         <TextView
             android:id="@+id/numWidgetText"
             android:layout_width="wrap_content"
+            android:text="第1周"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/MondayWidgetText"
             android:layout_width="wrap_content"
+            android:text="1"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/TuesdayWidgetText"
             android:layout_width="wrap_content"
+            android:text="2"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/WednesdayWidgetText"
             android:layout_width="wrap_content"
+            android:text="3"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/ThursdayWidgetText"
             android:layout_width="wrap_content"
+            android:text="4"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/FridayWidgetText"
             android:layout_width="wrap_content"
+            android:text="5"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/SaturdayWidgetText"
             android:layout_width="wrap_content"
+            android:text="6"
             android:layout_height="match_parent"></TextView>
 
         <TextView
             android:id="@+id/SundayWidgetText"
             android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:text="7"
             android:layout_height="match_parent"></TextView>
 
     </LinearLayout>
@@ -54,55 +63,9 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/widget_list"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/numWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/MondayWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/TuesdayWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/WednesdayWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/ThursdayWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/FridayWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/SaturdayWidgetContainer"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/SundayWidgetContainer"></LinearLayout>
 
     </ListView>
 
