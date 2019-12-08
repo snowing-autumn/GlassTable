@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".AppWidgetService"
+        <service android:name=".widget.AppWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS">
         </service>
 
@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".CourseAppWidgetProvider">
+        <receiver android:name=".widget.CourseAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

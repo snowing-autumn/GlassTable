@@ -1,8 +1,9 @@
-package com.example.glasstable;
+package com.example.glasstable.widget;
 
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViewsService;
+
+import com.example.glasstable.model.Course;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +18,7 @@ public class AppWidgetService extends RemoteViewsService {
     private ArrayList<Course> courseList;
     private ArrayList<ArrayList<Course>> courseArray=new ArrayList<>();
     private String FileName="coursedata";
+    private int mThisWeek=0;
 
     @Override
     public void onCreate() {
@@ -85,7 +87,7 @@ public class AppWidgetService extends RemoteViewsService {
             courseListToArray(courseList);
 
 
-        return new CourseAppWidgetFactory(getApplicationContext(),courseList);
+        return new CourseAppWidgetFactory(getApplicationContext(),courseArray.get(mThisWeek));
 
     }
 }

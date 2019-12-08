@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 
+import com.example.glasstable.model.Course;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

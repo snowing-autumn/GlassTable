@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 
+import com.example.glasstable.model.Course;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

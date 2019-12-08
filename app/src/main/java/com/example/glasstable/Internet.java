@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.example.glasstable.model.Course;
+
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.Connection.*;
@@ -12,8 +14,6 @@ import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.*;
 

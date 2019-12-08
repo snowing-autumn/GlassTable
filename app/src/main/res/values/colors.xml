@@ -60,9 +60,11 @@
     <color name="hotpink">#FF69B4</color>
     <!-- 热粉红色 -->
     <color name="tomato">#FF6347</color>
+    <color name="tomatoTr">#AAFF6347</color>
     <color name="tomato1">#AAFF6347</color>
     <!-- 西红柿色 -->
     <color name="orangered">#FF4500</color>
+    <color name="orangeredTr">#AAFF4500</color>
     <!-- 红橙色 -->
     <color name="deeppink">#FF1493</color>
     <!-- 深粉红色 -->
@@ -115,12 +117,14 @@
     <color name="lightcyan">#E0FFFF</color>
     <!-- 亮青色 -->
     <color name="burlywood">#DEB887</color>
+    <color name="burlywoodTr">#AADEB887</color>
     <!-- 实木色 -->
     <color name="plum">#DDA0DD</color>
     <!-- 洋李色 -->
     <color name="gainsboro">#DCDCDC</color>
     <!-- 淡灰色 -->
     <color name="crimson">#DC143C</color>
+    <color name="crimsonTr">#AADC143C</color>
     <!-- 暗深红色 -->
     <color name="palevioletred">#DB7093</color>
     <!-- 苍紫罗兰色 -->
@@ -157,6 +161,7 @@
     <color name="firebrick">#B22222</color>
     <!-- 火砖色 -->
     <color name="powderblue">#B0E0E6</color>
+    <color name="powderblueTr">#AAB0E0E6</color>
     <color name="powderblue1">#AAB0E0E6</color>
     <!-- 粉蓝色 -->
     <color name="lightsteelblue">#B0C4DE</color>
@@ -178,6 +183,7 @@
     <color name="palegreen">#98FB98</color>
     <!-- 苍绿色 -->
     <color name="darkviolet">#9400D3</color>
+    <color name="darkvioletTr">#AA9400D3</color>
     <!-- 暗紫罗兰色 -->
     <color name="mediumpurple">#9370DB</color>
     <!-- 中紫色 -->
@@ -210,6 +216,7 @@
     <color name="lawngreen">#7CFC00</color>
     <!-- 草绿色 -->
     <color name="mediumslateblue">#7B68EE</color>
+    <color name="mediumslateblueTr">#AA7B68EE</color>
     <color name="mediumslateblue1">#AA7B68EE</color>
     <!-- 中暗蓝色 -->
     <color name="lightslategray">#778899</color>
@@ -245,6 +252,7 @@
     <color name="steelblue">#4682B4</color>
     <!-- 钢兰色 -->
     <color name="royalblue">#4169E1</color>
+    <color name="royalblueTr">#AA4169E1</color>
     <!-- 皇家蓝 -->
     <color name="turquoise">#40E0D0</color>
     <!-- 青绿色 -->
@@ -259,6 +267,7 @@
     <color name="seagreen">#2E8B57</color>
     <!-- 海绿色 -->
     <color name="forestgreen">#228B22</color>
+    <color name="forestgreenTr">#AA228B22</color>
     <!-- 森林绿 -->
     <color name="lightseagreen">#20B2AA</color>
     <!-- 亮海蓝色 -->

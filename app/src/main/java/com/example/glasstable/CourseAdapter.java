@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.glasstable.model.ConflictedCourse;
+import com.example.glasstable.model.Course;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
